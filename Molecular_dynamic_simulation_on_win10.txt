@@ -1,0 +1,64 @@
+Running Molecular Dynamic Simulation with Gromacs on Windows 10
+
+Gromacs runs only on the command line, and you will need to install the 
+Ubuntu app from MS store. 
+
+After the installation, you will need to update the Ubuntu software
+```
+sudo apt get update
+```
+
+Update the ubuntu software 
+```
+sudo apt update
+```
+
+Upgrade the software after the update
+```
+sudo apt upgrade
+```
+
+run a C program on Ubuntu Linux using the gcc compiler 
+```
+sudo apt-get install gcc
+```
+
+CMake is used to control the software compilation process using simple platform and compiler independent configuration files, and generate native makefiles
+```
+sudo apt-get install cmake
+```
+
+The build-essentials packages are meta-packages that are necessary for compiling software.
+```
+sudo apt-get install build-essential
+```
+
+Library for computing Fast Fourier Transforms - development
+```
+sudo apt-get install libfftw3-dev
+```
+
+GROMACS is one of the most widely used open-source and free software codes in chemistry, used primarily for dynamical simulations of biomolecules
+```
+sudo apt-get install gromacs
+```
+
+check for the installation 
+```
+gmx
+```
+
+MDS for pdbfile 
+First download the Swiss-PdbViewer (https://spdbv.unil.ch/disclaim.html#)
+View the pdb file in the SPDBV to add missing atoms. 
+Select all then save the selection as .pdb file which you will use for MDS in Gromacs 
+
+Running gromacs when there is no missing Hydrogen 
+```
+gmx pdb2gmx -f 2EW7-1JLE.pdb -o 1.gro -p 1.top -water spce
+```
+
+Removing missing Hydrogens 
+```
+gmx pdb2gmx -f mod.pdb -o 1.gro -p 1.top -water spce -ignh
+```

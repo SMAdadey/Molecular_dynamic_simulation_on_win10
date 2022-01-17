@@ -1,0 +1,108 @@
+Creating a box around the protein to confine the space of the rxn
+
+Source: http://www.mdtutorials.com/gmx/lysozyme/06_equil.html 
+ 
+gmx editconf -f 1.gro -o 1_newbox.gro -c -d 1.0 -bt cubic
+
+
+Add water molecule since protein does not exist in a vacuum 
+gmx solvate -cp 1_newbox.gro -cs spc216.gro -o 1_solv.gro -p 1.top
+
+you need the mdp file first 
+download and create a txt file with “.mdp” extension (http://www.mdtutorials.com/gmx/lysozyme/Files/ions.mdp) copy and past the script on the link above 
+
+
+Add ions
+gmx genion -s 1_ions.tpr -o 1_solv_ions_gro -p 1.top -pname NA -nname CL -nn 8
+
+Relax the protein make minimizations 
+
+Create the minim.mdp using the file here (http://www.mdtutorials.com/gmx/lysozyme/Files/minim.mdp) 
+
+
+gmx grompp -f em.mdp -c 1_solv_ions_gro.gro -p 1.top -o em.tpr
+
+
+create another .mdp file and name it nvt.mdp 
+So now you get your content for the .mdp file (http://www.mdtutorials.com/gmx/lysozyme/Files/npt.mdp) 
+
+
+Let set the geometry of the system
+
+gmx grompp -f nvt.mdp -c em.gro -r em.gro -p 1.top -o nvt.tpr
+
+Another simulation for number volume temperature 
+
+gmx mdrun -v -deffnm nvt
+
+The previous step, NVT equilibration, stabilized the temperature of the system. Prior to data collection, we must also stabilize the pressure (and thus also the density) of the system.
+
+gmx grompp -f npt.mdp -c nvt.gro -r nvt.gro -t nvt.cpt -p 1.top -o npt.tpr
+
+gmx mdrun -v -deffnm npt
+
+
+
+make md.mdp file here (http://www.mdtutorials.com/gmx/lysozyme/Files/md.mdp) 
+
+Upon completion of the two equilibration phases, the system is now well-equilibrated at the desired temperature and pressure. We are now ready to release the position restraints and run production MD for data collection.
+
+gmx grompp -f md.mdp -c npt.gro -t npt.cpt -p 1.top -o md_0_1.tpr
+
+gmx mdrun -v -deffnm md_0_1
+
+
+
+Analysis 
+we will use trjconv to account for any periodicity in the system. The protein will diffuse through the unit cell, and may appear "broken" or may "jump" across to the other side of the box. To account for such behaviors, issue the following:
+
+gmx trjconv -s md_0_1.tpr -f md_0_1.xtc -o md_0_1_noPBC.xtc -pbc mol -center
+
+RSMD analysis
+
+gmx rms -s md_0_1.tpr -f md_0_1_noPBC.xtc -o rmsd.xvg -tu ns
+
+
+RMSD due to crystal structure 
+If we wish to calculate RMSD relative to the crystal structure, we could issue the following:
+gmx rms -s em.tpr -f md_0_1_noPBC.xtc -o rmsd_xtal.xvg -tu ns
+
+
+
+The radius of gyration of a protein is a measure of its compactness. If a protein is stably folded, it will likely maintain a relatively steady value of Rg. If a protein unfolds, its Rg will change over time. Let's analyze the radius of gyration
+gmx gyrate -s md_0_1.tpr -f md_0_1_noPBC.xtc -o gyrate.xvg 
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

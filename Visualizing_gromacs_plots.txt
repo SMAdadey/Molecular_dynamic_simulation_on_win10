@@ -1,0 +1,31 @@
+how to visualize your gyrate.xvg files
+
+Source: https://shocksolution.com/2013/03/12/how-to-plot-xvg-files-from-gromacs-on-windows/
+
+
+GROMACS produces graphical output in the form of .xvg files. These are designed to be viewed with a classic UNIX/Linux plotting program called Grace. If you happen to be using Linux and you have Grace installed, it is very easy to plot the data with the command
+To install grace 
+1. sudo apt-get update -y
+2. sudo apt-get install -y grace
+
+xmgrace my_file.xvg
+
+emgrace did not work hence I resorted to using exccell 
+
+
+
+
+If you aren’t using Linux, plotting .xvg files is quite a bit more difficult. Gnuplot is the only free plotting program that I have found that can handle .xvg files. Gnuplot is available for Windows (there is a direct download link near the top of the download page), but I will caution you that Gnuplot is not easy to learn. It has a command-line interface, and there are no point-and-click options to do basic operations such as labeling the axes of the plot. If you are using Gnuplot, you can plot the contents of an .xvg file with the command:
+
+plot "my_filename.xvg" u 1:2 w lines
+If you are more comfortable with Microsoft Office, you can also plot the contents of .xvg files using Excel. Start Excel, choose File->Open, and select “All Files (*.*) in the lower right corner of the dialog.  Select a .xvg file and press Open.  The text import wizard should start.  Choose Fixed width, Enter 14 where it says, “Start import at row: “ and press Next. A screenshot is shown below.xvg_import_step1
+
+ In the next window, remove one of the black vertical lines, and move the other one to Column 15 as shown below. Press Finish.
+
+xvg_import_step2If your import was successful, your spreadsheet should look like this:
+
+xvg_data_importedNow, highlight the first two columns and insert a scatter plot (with lines) as shown below:
+
+
+ 
+xvg_Excel_plotAlthough I generally don’t recommend using Excel for making publication-quality plots, it can be useful if you don’t have better tools available.
